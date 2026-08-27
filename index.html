@@ -6,7 +6,7 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   
-  <title>Reproductor Web OFFLINE</title>
+  <title>Meow Audio App</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jsmediatags/3.9.5/jsmediatags.min.js"></script>
   <style>
     :root {
@@ -17,36 +17,6 @@
       --text: #ffffff;
       --text-muted: rgba(255, 255, 255, 0.75);
       --audio-spec-color: #8ab4f8;
-    }
-
-    body.theme-classic-plus {
-      --bg: #0b0c10;
-      --card-bg: rgba(31, 40, 51, 0.75);
-      --card-border: rgba(102, 252, 241, 0.4);
-      --accent: #66fcf1;
-      --text: #ffffff;
-      --text-muted: rgba(255, 255, 255, 0.75);
-      --audio-spec-color: #66fcf1;
-    }
-
-    body.theme-cyberpunk {
-      --bg: #05050a;
-      --card-bg: rgba(18, 18, 31, 0.75);
-      --card-border: rgba(244, 63, 94, 0.4);
-      --accent: #f43f5e;
-      --text: #ffffff;
-      --text-muted: rgba(255, 255, 255, 0.7);
-      --audio-spec-color: #f43f5e;
-    }
-
-    body.theme-gold {
-      --bg: #121212;
-      --card-bg: rgba(30, 30, 30, 0.75);
-      --card-border: rgba(212, 175, 55, 0.4);
-      --accent: #d4af37;
-      --text: #fefefe;
-      --text-muted: rgba(255, 255, 255, 0.7);
-      --audio-spec-color: #d4af37;
     }
 
     * {
@@ -68,10 +38,23 @@
 
     body {
       display: flex;
-      align-items: center;
       justify-content: center;
+      align-items: center;
       color: var(--text);
-      padding: env(safe-area-inset-top) env(safe-area-inset-right) 0 env(safe-area-inset-left);
+      padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+    }
+
+    .app-container {
+      width: 100%;
+      max-width: 380px;
+      height: 100%;
+      max-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 10px;
+      position: relative;
     }
 
     .bg-blur {
@@ -96,11 +79,9 @@
       backdrop-filter: blur(25px) saturate(160%);
       -webkit-backdrop-filter: blur(25px) saturate(160%);
       width: 100%;
-      max-width: 380px;
-      height: 100%;
-      max-height: calc(100vh - env(safe-area-inset-top));
-      padding: 16px 18px calc(env(safe-area-inset-bottom, 24px) + 10px) 18px;
-      border-radius: 28px 28px 0 0;
+      flex: 1;
+      padding: 18px 16px;
+      border-radius: 28px;
       box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5),
                   inset 0 1px 1px rgba(255, 255, 255, 0.3);
       border: 1px solid var(--card-border);
@@ -116,14 +97,15 @@
 
     .player-header {
       display: flex;
-      justify-content: space-between;
+      justify-content: center;
       align-items: center;
-      margin-bottom: 4px;
+      margin-bottom: 6px;
       flex-shrink: 0;
     }
 
+    /* ENCABEZADO AUMENTADO */
     .header-title {
-      font-size: 0.8rem;
+      font-size: 1rem;
       font-weight: 600;
       text-transform: uppercase;
       letter-spacing: 1px;
@@ -135,15 +117,16 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      margin: 2px 0;
+      margin: 6px 0;
       flex-shrink: 1;
       min-height: 0;
       position: relative;
     }
 
+    /* PORTADA Y VISUALIZADOR AUMENTADOS */
     .cover-art {
       width: 100%;
-      max-width: 175px;
+      max-width: 255px;
       aspect-ratio: 1 / 1;
       background: rgba(255, 255, 255, 0.1);
       border-radius: 0px;
@@ -157,8 +140,8 @@
 
     .visualizer-canvas {
       position: absolute;
-      width: 195px;
-      height: 195px;
+      width: 270px;
+      height: 270px;
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
@@ -168,19 +151,16 @@
       opacity: 0.85;
     }
 
-    body.theme-classic-plus .visualizer-canvas {
-      display: block;
-    }
-
     .track-info {
-      margin-bottom: 2px;
+      margin-bottom: 4px;
       flex-shrink: 0;
     }
 
+    /* TEXTOS DE INFORMACIÓN DE PISTA AUMENTADOS */
     .track-title {
-      font-size: 1.05rem;
+      font-size: 1.45rem;
       font-weight: 700;
-      margin-bottom: 2px;
+      margin-bottom: 3px;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -188,7 +168,7 @@
     }
 
     .track-artist {
-      font-size: 0.8rem;
+      font-size: 1.05rem;
       color: var(--text-muted);
       white-space: nowrap;
       overflow: hidden;
@@ -196,9 +176,9 @@
     }
 
     .track-album {
-      font-size: 0.7rem;
+      font-size: 0.9rem;
       color: var(--text-muted);
-      margin-top: 1px;
+      margin-top: 2px;
       opacity: 0.8;
       white-space: nowrap;
       overflow: hidden;
@@ -210,19 +190,19 @@
       align-items: center;
       justify-content: center;
       gap: 6px;
-      font-size: 0.7rem;
+      font-size: 0.82rem;
       font-weight: 700;
       letter-spacing: 0.5px;
       color: var(--audio-spec-color);
-      margin: 2px 0 4px 0;
-      min-height: 16px;
+      margin: 2px 0 6px 0;
+      min-height: 18px;
       text-transform: uppercase;
       text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
       flex-shrink: 0;
     }
 
     .hires-icon {
-      height: 13px;
+      height: 16px;
       width: auto;
       vertical-align: middle;
       border-radius: 2px;
@@ -230,17 +210,17 @@
     }
 
     .status-badge {
-      font-size: 0.7rem;
+      font-size: 0.72rem;
       color: var(--accent);
-      min-height: 10px;
+      min-height: 12px;
       font-weight: 600;
       flex-shrink: 0;
     }
 
     .controls-row {
       display: flex;
-      gap: 6px;
-      margin-bottom: 4px;
+      gap: 8px;
+      margin-bottom: 6px;
       flex-shrink: 0;
     }
 
@@ -251,23 +231,23 @@
       justify-content: space-between;
       background: rgba(0, 0, 0, 0.3);
       border: 1px solid rgba(255, 255, 255, 0.15);
-      padding: 5px 10px;
-      border-radius: 10px;
+      padding: 6px 10px;
+      border-radius: 12px;
       backdrop-filter: blur(10px);
     }
 
     .control-label {
-      font-size: 0.65rem;
+      font-size: 0.68rem;
       color: var(--text-muted);
       font-weight: 600;
       text-transform: uppercase;
     }
 
-    .eq-select, .theme-select {
+    .eq-select {
       background: transparent;
       color: #ffffff;
       border: none;
-      font-size: 0.72rem;
+      font-size: 0.75rem;
       font-weight: 600;
       outline: none;
       text-align: right;
@@ -275,7 +255,7 @@
       max-width: 105px;
     }
 
-    .eq-select option, .theme-select option {
+    .eq-select option {
       background: #1c1c24;
       color: #ffffff;
     }
@@ -283,8 +263,8 @@
     .toggle-switch {
       position: relative;
       display: inline-block;
-      width: 30px;
-      height: 15px;
+      width: 32px;
+      height: 16px;
     }
 
     .toggle-switch input {
@@ -305,8 +285,8 @@
     .slider:before {
       position: absolute;
       content: "";
-      height: 11px;
-      width: 11px;
+      height: 12px;
+      width: 12px;
       left: 2px;
       bottom: 2px;
       background-color: white;
@@ -319,12 +299,12 @@
     }
 
     input:checked + .slider:before {
-      transform: translateX(15px);
+      transform: translateX(16px);
     }
 
     .progress-container {
       width: 100%;
-      margin-bottom: 4px;
+      margin-bottom: 6px;
       flex-shrink: 0;
     }
 
@@ -332,8 +312,8 @@
       width: 100%;
       -webkit-appearance: none;
       appearance: none;
-      height: 4px;
-      border-radius: 2px;
+      height: 5px;
+      border-radius: 3px;
       background: rgba(255, 255, 255, 0.25);
       outline: none;
       cursor: pointer;
@@ -342,28 +322,29 @@
     .seek-bar::-webkit-slider-thumb {
       -webkit-appearance: none;
       appearance: none;
-      width: 12px;
-      height: 12px;
+      width: 14px;
+      height: 14px;
       border-radius: 50%;
       background: var(--text);
-      box-shadow: 0 0 8px rgba(0, 0, 0, 0.5);
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
       cursor: pointer;
     }
 
     .time-stamps {
       display: flex;
       justify-content: space-between;
-      font-size: 0.65rem;
+      font-size: 0.68rem;
       color: var(--text-muted);
-      margin-top: 2px;
+      margin-top: 3px;
     }
 
+    /* BOTONES DE CONTROL AUMENTADOS */
     .controls {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 0 4px;
-      margin-bottom: 4px;
+      padding: 0 6px;
+      margin-bottom: 8px;
       flex-shrink: 0;
     }
 
@@ -371,9 +352,9 @@
       background: none;
       border: none;
       color: var(--text);
-      font-size: 1.2rem;
+      font-size: 1.5rem;
       cursor: pointer;
-      padding: 4px;
+      padding: 6px;
       transition: transform 0.1s ease;
     }
 
@@ -384,18 +365,18 @@
     .btn-play {
       background: var(--text);
       color: #121216;
-      width: 44px;
-      height: 44px;
+      width: 54px;
+      height: 54px;
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 1.2rem;
-      box-shadow: 0 6px 16px rgba(0,0,0,0.3);
+      font-size: 1.5rem;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.3);
     }
 
     .btn-sub {
-      font-size: 0.95rem;
+      font-size: 1.15rem;
       opacity: 0.5;
       transition: opacity 0.2s, color 0.2s;
     }
@@ -405,18 +386,18 @@
       color: var(--accent);
     }
 
+    /* BOTÓN CARGAR CANCIONES AUMENTADO */
     .file-input-wrapper {
       position: relative;
       display: block;
       width: 100%;
-      height: 34px;
-      border-radius: 10px;
+      height: 42px;
+      border-radius: 12px;
       overflow: hidden;
-      background: rgba(255, 255, 255, 0.15);
-      border: 1px solid rgba(255, 255, 255, 0.25);
+      background: rgba(255, 255, 255, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.3);
       backdrop-filter: blur(10px);
       flex-shrink: 0;
-      margin-bottom: 4px;
     }
 
     .file-input-btn {
@@ -426,7 +407,7 @@
       align-items: center;
       justify-content: center;
       color: var(--text);
-      font-size: 0.78rem;
+      font-size: 0.9rem;
       font-weight: 600;
       pointer-events: none;
     }
@@ -442,37 +423,47 @@
       z-index: 5;
     }
 
-    .bottom-nav-bar {
+    .bottom-nav {
+      background: var(--card-bg);
+      backdrop-filter: blur(25px) saturate(160%);
+      -webkit-backdrop-filter: blur(25px) saturate(160%);
+      border-radius: 20px;
+      border: 1px solid var(--card-border);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
       display: flex;
-      align-items: center;
       justify-content: space-around;
-      background: rgba(0, 0, 0, 0.65);
-      border: 1px solid rgba(255, 255, 255, 0.18);
-      border-radius: 12px;
-      padding: 4px 10px;
-      margin-top: 2px;
-      flex-shrink: 0;
-      backdrop-filter: blur(14px);
+      align-items: center;
+      padding: 8px 0;
+      z-index: 20;
+      margin-top: auto;
+      margin-bottom: calc(env(safe-area-inset-bottom, 0px) + 2px);
     }
 
-    .nav-box-btn {
-      background: rgba(255, 255, 255, 0.1);
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      color: var(--text);
-      width: 36px;
-      height: 30px;
-      border-radius: 8px;
+    .nav-btn {
+      background: none;
+      border: none;
+      color: var(--text-muted);
       display: flex;
+      flex-direction: column;
       align-items: center;
       justify-content: center;
+      gap: 3px;
       cursor: pointer;
-      font-size: 0.95rem;
-      transition: background 0.2s, transform 0.1s, border-color 0.2s;
+      font-size: 0.7rem;
+      font-weight: 600;
+      width: 33%;
+      transition: color 0.2s, transform 0.1s;
     }
 
-    .nav-box-btn:active, .nav-box-btn.active {
-      background: var(--accent);
-      border-color: var(--accent);
+    .nav-btn .nav-icon {
+      font-size: 1.25rem;
+    }
+
+    .nav-btn.active {
+      color: var(--accent);
+    }
+
+    .nav-btn:active {
       transform: scale(0.92);
     }
 
@@ -482,11 +473,11 @@
       left: 0;
       width: 100%;
       height: 100%;
-      background: rgba(18, 18, 24, 0.96);
+      background: rgba(18, 18, 24, 0.95);
       backdrop-filter: blur(30px);
       -webkit-backdrop-filter: blur(30px);
       border-radius: 28px;
-      padding: 16px;
+      padding: 18px;
       display: none;
       flex-direction: column;
       z-index: 10;
@@ -511,8 +502,22 @@
     }
 
     .playlist-title {
-      font-size: 0.88rem;
+      font-size: 0.9rem;
       font-weight: 700;
+    }
+
+    .btn-icon {
+      background: rgba(255, 255, 255, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      color: var(--text);
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 0.85rem;
     }
 
     .playlist-tools {
@@ -533,7 +538,7 @@
     }
 
     .sort-label {
-      font-size: 0.7rem;
+      font-size: 0.72rem;
       color: var(--text-muted);
       font-weight: 600;
     }
@@ -542,7 +547,7 @@
       background: transparent;
       color: var(--text);
       border: none;
-      font-size: 0.75rem;
+      font-size: 0.78rem;
       font-weight: 600;
       outline: none;
       cursor: pointer;
@@ -568,7 +573,7 @@
       padding: 6px 10px;
       border-radius: 8px;
       color: var(--text);
-      font-size: 0.8rem;
+      font-size: 0.82rem;
       outline: none;
     }
 
@@ -601,7 +606,7 @@
     }
 
     .playlist-item-title {
-      font-size: 0.8rem;
+      font-size: 0.82rem;
       font-weight: 600;
       white-space: nowrap;
       overflow: hidden;
@@ -610,300 +615,203 @@
     }
 
     .playlist-item-artist {
-      font-size: 0.7rem;
+      font-size: 0.72rem;
       color: var(--text-muted);
     }
-
-    /* ---------------- MODAL DE PRIVACIDAD GATUNA ---------------- */
-    .privacy-modal {
+    
+    /* --- ESTILOS DEL AVISO GATUNO --- */
+    .meow-aviso-overlay {
       position: fixed;
       top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(0, 0, 0, 0.65);
-      backdrop-filter: blur(15px);
-      -webkit-backdrop-filter: blur(15px);
+      background: rgba(15, 16, 21, 0.85);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
       z-index: 9999;
       display: flex;
-      align-items: center;
       justify-content: center;
+      align-items: center;
       padding: 20px;
-      opacity: 0;
-      visibility: hidden;
-      transition: opacity 0.4s ease, visibility 0.4s ease;
     }
 
-    .privacy-modal.active {
-      opacity: 1;
-      visibility: visible;
-    }
-
-    .privacy-content {
-      background: rgba(18, 18, 24, 0.85);
-      border: 1px solid var(--card-border);
-      border-radius: 28px;
-      padding: 30px 24px;
+    .meow-aviso-box {
+      background: rgba(255, 255, 255, 0.15);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      border-radius: 20px;
+      padding: 24px;
       text-align: center;
-      max-width: 340px;
-      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.6), inset 0 1px 1px rgba(255, 255, 255, 0.2);
-      transform: translateY(30px) scale(0.95);
-      transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      max-width: 320px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+      color: #fff;
     }
 
-    .privacy-modal.active .privacy-content {
-      transform: translateY(0) scale(1);
-    }
-
-    .privacy-icon {
-      font-size: 3.5rem;
+    .meow-aviso-box h3 {
       margin-bottom: 12px;
-      line-height: 1;
+      font-size: 1.2rem;
+      color: var(--accent);
     }
 
-    .privacy-title {
-      font-size: 1.15rem;
-      font-weight: 800;
+    .meow-aviso-box p {
+      font-size: 0.9rem;
       margin-bottom: 16px;
-      color: var(--text);
-      letter-spacing: 0.5px;
+      line-height: 1.4;
+      color: rgba(255,255,255,0.85);
     }
 
-    .privacy-text {
-      font-size: 0.85rem;
-      color: var(--text-muted);
-      line-height: 1.5;
-      margin-bottom: 24px;
-    }
-
-    .privacy-checkbox-wrapper {
+    .meow-checkbox-label {
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 10px;
-      margin-bottom: 24px;
-      cursor: pointer;
-    }
-
-    .privacy-checkbox-wrapper input[type="checkbox"] {
-      appearance: none;
-      -webkit-appearance: none;
-      width: 20px;
-      height: 20px;
-      border: 2px solid var(--card-border);
-      border-radius: 6px;
-      background: rgba(0,0,0,0.3);
-      outline: none;
-      cursor: pointer;
-      position: relative;
-      transition: all 0.2s;
-    }
-
-    .privacy-checkbox-wrapper input[type="checkbox"]:checked {
-      background: var(--accent);
-      border-color: var(--accent);
-    }
-
-    .privacy-checkbox-wrapper input[type="checkbox"]:checked::after {
-      content: '✔';
-      position: absolute;
-      top: 50%; left: 50%;
-      transform: translate(-50%, -50%);
-      color: #121216;
-      font-size: 12px;
-      font-weight: 900;
-    }
-
-    .privacy-checkbox-label {
+      gap: 8px;
       font-size: 0.85rem;
-      color: var(--text);
-      font-weight: 600;
+      margin-bottom: 16px;
       cursor: pointer;
     }
 
-    .privacy-btn {
+    .meow-btn-cerrar {
       background: var(--accent);
-      color: #121216;
+      color: #fff;
       border: none;
-      padding: 14px 24px;
-      border-radius: 14px;
+      padding: 10px 20px;
+      border-radius: 12px;
       font-size: 0.95rem;
-      font-weight: 800;
+      font-weight: bold;
       cursor: pointer;
-      width: 100%;
-      transition: opacity 0.3s, transform 0.1s, filter 0.3s;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+      transition: transform 0.1s;
     }
 
-    .privacy-btn:disabled {
-      background: rgba(255, 255, 255, 0.1);
-      color: rgba(255, 255, 255, 0.4);
-      cursor: not-allowed;
-      box-shadow: none;
-    }
-
-    .privacy-btn:not(:disabled):active {
-      transform: scale(0.96);
+    .meow-btn-cerrar:active {
+      transform: scale(0.95);
     }
   </style>
 </head>
 <body>
 
-  <!-- Modal de Privacidad -->
-  <div class="privacy-modal" id="privacyModal">
-    <div class="privacy-content">
-      <div class="privacy-icon">🐈‍⬛</div>
-      <h2 class="privacy-title">¡Aviso de privacidad gatuna!</h2>
-      <p class="privacy-text">Los archivos de música siempre se ejecutan localmente en tu dispositivo. No se envían a ningún servidor externo.</p>
-      
-      <label class="privacy-checkbox-wrapper">
-        <input type="checkbox" id="privacyCheckbox">
-        <span class="privacy-checkbox-label">He leído y entendido</span>
+  <!-- AVISO DE PRIVACIDAD GATUNO -->
+  <div id="meow-aviso-privacidad" class="meow-aviso-overlay">
+    <div class="meow-aviso-box">
+      <h3>🐾 Aviso Gatuno 🐾</h3>
+      <p>Todo el procesamiento de audio se realiza de manera local en tu dispositivo. Ningún archivo o dato personal es subido a servidores externos. ¡Miau!</p>
+      <label class="meow-checkbox-label">
+        <input type="checkbox" id="meow-check-no-mostrar">
+        No volver a mostrar
       </label>
-
-      <button id="btnAcceptPrivacy" class="privacy-btn" disabled>Aceptar</button>
+      <button class="meow-btn-cerrar" onclick="meowCerrarAviso()">Entendido 🐱</button>
     </div>
   </div>
 
   <div class="bg-blur" id="bgBlur"></div>
 
-  <div class="player-card">
-    <div class="player-header">
-      <span class="header-title">Meow Audio APP 🐈🐈</span>
-    </div>
-
-    <div class="cover-container">
-      <canvas id="visualizerCanvas" class="visualizer-canvas"></canvas>
-      <img class="cover-art" id="cover" src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='1.5'><path d='M9 18V5l12-2v13'/><circle cx='6' cy='18' r='3'/><circle cx='18' cy='16' r='3'/></svg>" alt="Cover">
-    </div>
-
-    <div class="track-info">
-      <div class="track-title" id="title">Sin reproducción</div>
-      <div class="track-artist" id="artist">Selecciona un archivo</div>
-      <div class="track-album" id="album"></div>
-    </div>
-
-    <div class="audio-specs-badge" id="audioSpecs"></div>
-
-    <div class="status-badge" id="status"></div>
-
-    <div class="controls-row">
-      <div class="control-box">
-        <span class="control-label">EQ</span>
-        <select id="eqSelect" class="eq-select">
-          <option value="flat">Plano</option>
-          <option value="bassBoost">Bass Boost</option>
-          <option value="electronic">Electronic</option>
-          <option value="hiphop">Hip-Hop</option>
-          <option value="jazz">Jazz</option>
-          <option value="pop">Pop</option>
-          <option value="rock">Rock</option>
-        </select>
+  <div class="app-container">
+    <div class="player-card">
+      <div class="player-header">
+        <span class="header-title">Meow Audio APP 🐈🐈</span>
       </div>
 
-      <div class="control-box">
-        <span class="control-label">Dolby</span>
-        <label class="toggle-switch">
-          <input type="checkbox" id="dolbyToggle">
-          <span class="slider"></span>
-        </label>
+      <div class="cover-container">
+        <canvas id="visualizerCanvas" class="visualizer-canvas"></canvas>
+        <img class="cover-art" id="cover" src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='1.5'><path d='M9 18V5l12-2v13'/><circle cx='6' cy='18' r='3'/><circle cx='18' cy='16' r='3'/></svg>" alt="Cover">
       </div>
-    </div>
 
-    <div class="controls-row">
-      <div class="control-box" style="flex: 1;">
-        <span class="control-label">Tema</span>
-        <select id="themeSelect" class="theme-select">
-          <option value="classic">Meow Classic</option>
-          <option value="classic-plus">Meow Classic +</option>
-          <option value="cyberpunk">Cyberpunk Neon</option>
-          <option value="gold">Dark Gold</option>
-        </select>
+      <div class="track-info">
+        <div class="track-title" id="title">Sin reproducción</div>
+        <div class="track-artist" id="artist">Selecciona un archivo</div>
+        <div class="track-album" id="album"></div>
       </div>
-    </div>
 
-    <div class="progress-container">
-      <input type="range" id="seekBar" class="seek-bar" value="0" max="100">
-      <div class="time-stamps">
-        <span id="currentTime">00:00</span>
-        <span id="duration">00:00</span>
-      </div>
-    </div>
+      <div class="audio-specs-badge" id="audioSpecs"></div>
 
-    <div class="controls">
-      <button class="btn btn-sub" id="btnShuffle">🔀</button>
-      <button class="btn" id="btnPrev">⏮</button>
-      <button class="btn btn-play" id="btnPlay">▶</button>
-      <button class="btn" id="btnNext">⏭</button>
-      <button class="btn btn-sub" id="btnRepeat">🔁</button>
-    </div>
+      <div class="status-badge" id="status"></div>
 
-    <div class="file-input-wrapper">
-      <div class="file-input-btn">📁 Cargar canciones</div>
-      <input type="file" id="fileInput" class="real-file-input" multiple accept=".mp3,.wav,.ogg,.flac,.m4a,.aac,audio/*">
-    </div>
-
-    <div class="bottom-nav-bar">
-      <button class="nav-box-btn active" id="navHome" title="Inicio">🏠</button>
-      <button class="nav-box-btn" id="navQueue" title="Cola de reproducción">☰</button>
-      <button class="nav-box-btn" id="navSearch" title="Buscar canción">🔍</button>
-    </div>
-
-    <div class="playlist-overlay" id="playlistOverlay">
-      <div class="playlist-header">
-        <span class="playlist-title" id="overlayTitle">Cola de reproducción</span>
-        <button class="btn-icon" id="btnCloseQueue" style="background:rgba(255,255,255,0.2); border:1px solid rgba(255,255,255,0.3); color:#fff; width:32px; height:32px; border-radius:50%; cursor:pointer;">✕</button>
-      </div>
-      
-      <div class="playlist-tools">
-        <div class="sort-bar" id="sortBarContainer">
-          <span class="sort-label">Ordenar por:</span>
-          <select id="sortSelect" class="sort-select">
-            <option value="default">Orden original</option>
-            <option value="title">Título</option>
-            <option value="artist">Artista</option>
-            <option value="album">Álbum</option>
+      <div class="controls-row">
+        <div class="control-box">
+          <span class="control-label">EQ</span>
+          <select id="eqSelect" class="eq-select">
+            <option value="flat">Plano</option>
+            <option value="bassBoost">Bass Boost</option>
+            <option value="electronic">Electronic</option>
+            <option value="hiphop">Hip-Hop</option>
+            <option value="jazz">Jazz</option>
+            <option value="pop">Pop</option>
+            <option value="rock">Rock</option>
           </select>
         </div>
 
-        <div class="search-box-container" id="searchBoxContainer">
-          <input type="text" id="searchInput" class="search-input" placeholder="Buscar por título, artista o álbum...">
+        <div class="control-box">
+          <span class="control-label">Dolby</span>
+          <label class="toggle-switch">
+            <input type="checkbox" id="dolbyToggle">
+            <span class="slider"></span>
+          </label>
         </div>
       </div>
 
-      <ul class="playlist-list" id="playlistContainer"></ul>
+      <div class="progress-container">
+        <input type="range" id="seekBar" class="seek-bar" value="0" max="100">
+        <div class="time-stamps">
+          <span id="currentTime">00:00</span>
+          <span id="duration">00:00</span>
+        </div>
+      </div>
+
+      <div class="controls">
+        <button class="btn btn-sub" id="btnShuffle">🔀</button>
+        <button class="btn" id="btnPrev">⏮</button>
+        <button class="btn btn-play" id="btnPlay">▶</button>
+        <button class="btn" id="btnNext">⏭</button>
+        <button class="btn btn-sub" id="btnRepeat">🔁</button>
+      </div>
+
+      <div class="file-input-wrapper">
+        <div class="file-input-btn">📁 Cargar canciones</div>
+        <input type="file" id="fileInput" class="real-file-input" multiple accept=".mp3,.wav,.ogg,.flac,.m4a,.aac,audio/*">
+      </div>
+
+      <div class="playlist-overlay" id="playlistOverlay">
+        <div class="playlist-header">
+          <span class="playlist-title">Cola de reproducción</span>
+          <button class="btn-icon" id="btnCloseQueue">✕</button>
+        </div>
+        
+        <div class="playlist-tools">
+          <div class="sort-bar">
+            <span class="sort-label">Ordenar por:</span>
+            <select id="sortSelect" class="sort-select">
+              <option value="default">Orden original</option>
+              <option value="title">Título</option>
+              <option value="artist">Artista</option>
+              <option value="album">Álbum</option>
+            </select>
+          </div>
+
+          <div class="search-box-container" id="searchBoxContainer">
+            <input type="text" id="searchInput" class="search-input" placeholder="Buscar por título, artista o álbum...">
+          </div>
+        </div>
+
+        <ul class="playlist-list" id="playlistContainer"></ul>
+      </div>
+    </div>
+
+    <!-- RECUADRO INDEPENDIENTE DE NAVEGACIÓN INFERIOR -->
+    <div class="bottom-nav">
+      <button class="nav-btn active" id="navHome">
+        <span class="nav-icon">🏠</span>
+        <span>Inicio</span>
+      </button>
+      <button class="nav-btn" id="navQueue">
+        <span class="nav-icon">☰</span>
+        <span>Queue</span>
+      </button>
+      <button class="nav-btn" id="navSearch">
+        <span class="nav-icon">🔍</span>
+        <span>Buscar</span>
+      </button>
     </div>
   </div>
 
   <audio id="audio" preload="auto" playsinline></audio>
 
   <script>
-    // --- LÓGICA DEL AVISO DE PRIVACIDAD GATUNA ---
-    const privacyModal = document.getElementById('privacyModal');
-    const privacyCheckbox = document.getElementById('privacyCheckbox');
-    const btnAcceptPrivacy = document.getElementById('btnAcceptPrivacy');
-
-    // Verificar si ya se aceptó el aviso anteriormente
-    if (!localStorage.getItem('meow_privacy_accepted')) {
-      // Pequeño retraso para que la animación de entrada se vea fluida al cargar
-      setTimeout(() => {
-        privacyModal.classList.add('active');
-      }, 400);
-    }
-
-    // Habilitar botón solo si la casilla está marcada
-    privacyCheckbox.addEventListener('change', (e) => {
-      btnAcceptPrivacy.disabled = !e.target.checked;
-    });
-
-    // Guardar en caché y cerrar modal al aceptar
-    btnAcceptPrivacy.addEventListener('click', () => {
-      localStorage.setItem('meow_privacy_accepted', 'true');
-      privacyModal.classList.remove('active');
-      setTimeout(() => {
-        privacyModal.style.display = 'none'; // Se retira del DOM visualmente
-      }, 400);
-    });
-    // ----------------------------------------------
-
-
     const DEFAULT_COVER = "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='1.5'><path d='M9 18V5l12-2v13'/><circle cx='6' cy='18' r='3'/><circle cx='18' cy='16' r='3'/></svg>";
     
     const HI_RES_SVG = `data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'><rect width='200' height='200' fill='%23d4af37' rx='8'/><path d='M0 95 Q100 130 200 95 L200 200 L0 200 Z' fill='%23000000'/><text x='100' y='68' font-family='Arial Black, sans-serif' font-weight='900' font-size='56' fill='%23000000' text-anchor='middle'>Hi-Res</text><text x='100' y='165' font-family='Arial, sans-serif' font-weight='900' font-size='42' fill='%23d4af37' text-anchor='middle'>AUDIO</text></svg>`;
@@ -925,24 +833,22 @@
     const fileInput = document.getElementById('fileInput');
     const eqSelect = document.getElementById('eqSelect');
     const dolbyToggle = document.getElementById('dolbyToggle');
-    const themeSelect = document.getElementById('themeSelect');
 
     const seekBar = document.getElementById('seekBar');
     const currentTimeEl = document.getElementById('currentTime');
     const durationEl = document.getElementById('duration');
 
-    const navHome = document.getElementById('navHome');
-    const navQueue = document.getElementById('navQueue');
-    const navSearch = document.getElementById('navSearch');
     const btnCloseQueue = document.getElementById('btnCloseQueue');
     const playlistOverlay = document.getElementById('playlistOverlay');
     const playlistContainer = document.getElementById('playlistContainer');
-    const overlayTitle = document.getElementById('overlayTitle');
 
     const searchBoxContainer = document.getElementById('searchBoxContainer');
-    const sortBarContainer = document.getElementById('sortBarContainer');
     const searchInput = document.getElementById('searchInput');
     const sortSelect = document.getElementById('sortSelect');
+
+    const navHome = document.getElementById('navHome');
+    const navQueue = document.getElementById('navQueue');
+    const navSearch = document.getElementById('navSearch');
 
     const canvas = document.getElementById('visualizerCanvas');
     const canvasCtx = canvas.getContext('2d');
@@ -963,25 +869,9 @@
     let dolbyGain = null;
     let animationId = null;
 
-    function applyTheme(themeName) {
-      document.body.classList.remove('theme-classic-plus', 'theme-cyberpunk', 'theme-gold');
-      if (themeName === 'classic-plus') {
-        document.body.classList.add('theme-classic-plus');
-      } else if (themeName === 'cyberpunk') {
-        document.body.classList.add('theme-cyberpunk');
-      } else if (themeName === 'gold') {
-        document.body.classList.add('theme-gold');
-      }
-      localStorage.setItem('meow_selected_theme', themeName);
-    }
-
-    themeSelect.addEventListener('change', (e) => {
-      applyTheme(e.target.value);
-    });
-
-    const savedTheme = localStorage.getItem('meow_selected_theme') || 'classic';
-    themeSelect.value = savedTheme;
-    applyTheme(savedTheme);
+    const silentWav = "data:audio/wav;base64,UklGRigAAABXQVZFZm10IBIAAAABAAEARKwAAIhYAQACABAAAABkYXRhAgAAAAEA";
+    const keepAliveAudio = new Audio(silentWav);
+    keepAliveAudio.loop = true;
 
     const FREQUENCIES = [32, 64, 125, 250, 500, 1000, 2000, 4000, 8000, 16000];
     const EQ_PRESETS = {
@@ -1031,66 +921,20 @@
           dolbyFilter.connect(dolbyGain);
           dolbyGain.connect(analyser);
           analyser.connect(audioCtx.destination);
-
-          startVisualizer();
+          
+          audioCtx.onstatechange = () => {
+            if (audioCtx.state === 'suspended' && !audio.paused) {
+              audioCtx.resume();
+            }
+          };
         } catch (e) {
           console.warn("WebAudio no disponible");
         }
       }
     }
 
-    function startVisualizer() {
-      if (!canvas || !analyser) return;
-      canvas.width = 195;
-      canvas.height = 195;
-
-      const bufferLength = analyser.frequencyBinCount;
-      const dataArray = new Uint8Array(bufferLength);
-
-      function draw() {
-        animationId = requestAnimationFrame(draw);
-        analyser.getByteFrequencyData(dataArray);
-
-        canvasCtx.clearRect(0, 0, canvas.width, canvas.height);
-
-        if (document.body.classList.contains('theme-classic-plus')) {
-          const centerX = canvas.width / 2;
-          const centerY = canvas.height / 2;
-          const radius = 88;
-
-          canvasCtx.save();
-          canvasCtx.translate(centerX, centerY);
-
-          const bars = 32;
-          const angleStep = (Math.PI * 2) / bars;
-
-          for (let i = 0; i < bars; i++) {
-            const barHeight = (dataArray[i] / 255) * 30;
-            const x1 = Math.cos(i * angleStep) * radius;
-            const y1 = Math.sin(i * angleStep) * radius;
-            const x2 = Math.cos(i * angleStep) * (radius + barHeight);
-            const y2 = Math.sin(i * angleStep) * (radius + barHeight);
-
-            canvasCtx.strokeStyle = '#66fcf1';
-            canvasCtx.lineWidth = 3;
-            canvasCtx.lineCap = 'round';
-
-            canvasCtx.beginPath();
-            canvasCtx.moveTo(x1, y1);
-            canvasCtx.lineTo(x2, y2);
-            canvasCtx.stroke();
-          }
-
-          canvasCtx.restore();
-        }
-      }
-
-      if (animationId) cancelAnimationFrame(animationId);
-      draw();
-    }
-
     function updateAudioEffects() {
-      if (eqSelect.value !== 'flat' || dolbyToggle.checked || document.body.classList.contains('theme-classic-plus')) {
+      if (eqSelect.value !== 'flat' || dolbyToggle.checked) {
         initWebAudio();
         if (audioCtx && audioCtx.state === 'suspended') {
           audioCtx.resume();
@@ -1116,47 +960,35 @@
     eqSelect.addEventListener('change', updateAudioEffects);
     dolbyToggle.addEventListener('change', updateAudioEffects);
 
-    themeSelect.addEventListener('change', (e) => {
-      applyTheme(e.target.value);
-      if (e.target.value === 'classic-plus') {
-        initWebAudio();
-      }
-    });
-
-    function updateNavActiveState(activeId) {
+    function setActiveTab(activeBtn) {
       navHome.classList.remove('active');
       navQueue.classList.remove('active');
       navSearch.classList.remove('active');
-      if (activeId) document.getElementById(activeId).classList.add('active');
+      activeBtn.classList.add('active');
     }
 
     navHome.addEventListener('click', () => {
-      updateNavActiveState('navHome');
+      setActiveTab(navHome);
       playlistOverlay.classList.remove('active');
+      searchBoxContainer.classList.remove('active');
     });
 
     navQueue.addEventListener('click', () => {
-      updateNavActiveState('navQueue');
-      overlayTitle.textContent = "Cola de reproducción";
-      sortBarContainer.style.display = 'flex';
+      setActiveTab(navQueue);
       searchBoxContainer.classList.remove('active');
       playlistOverlay.classList.add('active');
-      renderPlaylistUI();
     });
 
     navSearch.addEventListener('click', () => {
-      updateNavActiveState('navSearch');
-      overlayTitle.textContent = "Buscar canción";
-      sortBarContainer.style.display = 'none';
+      setActiveTab(navSearch);
       searchBoxContainer.classList.add('active');
       playlistOverlay.classList.add('active');
       setTimeout(() => searchInput.focus(), 50);
-      renderPlaylistUI();
     });
 
     btnCloseQueue.addEventListener('click', () => {
       playlistOverlay.classList.remove('active');
-      updateNavActiveState('navHome');
+      setActiveTab(navHome);
     });
 
     searchInput.addEventListener('input', () => {
@@ -1201,10 +1033,8 @@
       playlistContainer.innerHTML = '';
       
       const query = searchInput.value.toLowerCase().trim();
-      const isSearching = searchBoxContainer.classList.contains('active');
-
       const filteredTracks = playlist.map((track, originalIndex) => ({ track, originalIndex })).filter(({ track }) => {
-        if (!isSearching || !query) return true;
+        if (!query) return true;
         const titleMatch = (track.title || '').toLowerCase().includes(query);
         const artistMatch = (track.artist || '').toLowerCase().includes(query);
         const albumMatch = (track.album || '').toLowerCase().includes(query);
@@ -1213,7 +1043,7 @@
       });
 
       if (filteredTracks.length === 0) {
-        playlistContainer.innerHTML = '<li style="color:var(--text-muted); font-size:0.8rem; padding:10px; text-align:center;">No se encontraron coincidencias</li>';
+        playlistContainer.innerHTML = '<li style="color:var(--text-muted); font-size:0.82rem; padding:10px; text-align:center;">No se encontraron coincidencias</li>';
         return;
       }
 
@@ -1231,7 +1061,7 @@
           currentIndex = originalIndex;
           processAndPlayTrack(currentIndex);
           playlistOverlay.classList.remove('active');
-          updateNavActiveState('navHome');
+          setActiveTab(navHome);
         });
         playlistContainer.appendChild(li);
       });
@@ -1249,7 +1079,7 @@
         btnRepeat.classList.add('active');
       } else if (repeatMode === 'all') {
         repeatMode = 'one';
-        btnRepeat.textContent = '🂂'.replace('🂂','🔂');
+        btnRepeat.textContent = '🔂';
         btnRepeat.classList.add('active');
       } else {
         repeatMode = 'off';
@@ -1480,7 +1310,7 @@
     }
 
     function startPlayback(url, title, artist, album, cover) {
-      if (eqSelect.value !== 'flat' || dolbyToggle.checked || document.body.classList.contains('theme-classic-plus')) {
+      if (eqSelect.value !== 'flat' || dolbyToggle.checked) {
         initWebAudio();
       }
 
@@ -1492,6 +1322,7 @@
       setupMediaSession(title, artist, album, cover);
 
       audio.play().then(() => {
+        keepAliveAudio.play().catch(() => {});
         btnPlay.textContent = '⏸';
         updatePositionState();
       }).catch(err => {
@@ -1516,11 +1347,13 @@
         navigator.mediaSession.setActionHandler('play', () => {
           if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
           audio.play();
+          keepAliveAudio.play().catch(() => {});
           btnPlay.textContent = '⏸';
         });
 
         navigator.mediaSession.setActionHandler('pause', () => {
           audio.pause();
+          keepAliveAudio.pause();
           btnPlay.textContent = '▶';
         });
 
@@ -1588,9 +1421,11 @@
 
       if (audio.paused) {
         audio.play();
+        keepAliveAudio.play().catch(() => {});
         btnPlay.textContent = '⏸';
       } else {
         audio.pause();
+        keepAliveAudio.pause();
         btnPlay.textContent = '▶';
       }
     }
@@ -1615,6 +1450,7 @@
 
       if (currentIndex === playlist.length - 1 && repeatMode === 'off' && !isShuffle) {
         audio.pause();
+        keepAliveAudio.pause();
         btnPlay.textContent = '▶';
         return;
       }
@@ -1653,6 +1489,37 @@
         playNext();
       }
     });
+
+    document.addEventListener("visibilitychange", () => {
+      if (audioCtx && audioCtx.state === 'suspended' && !audio.paused) {
+        audioCtx.resume();
+      }
+    });
+
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js')
+          .then(reg => console.log('Service Worker listo'))
+          .catch(err => console.log('Error:', err));
+      });
+    }
+
+    /* --- LÓGICA DEL AVISO GATUNO --- */
+    document.addEventListener('DOMContentLoaded', () => {
+      if (localStorage.getItem('meowOcultarAviso') === 'true') {
+        const aviso = document.getElementById('meow-aviso-privacidad');
+        if (aviso) aviso.style.display = 'none';
+      }
+    });
+
+    function meowCerrarAviso() {
+      const checkbox = document.getElementById('meow-check-no-mostrar');
+      if (checkbox && checkbox.checked) {
+        localStorage.setItem('meowOcultarAviso', 'true');
+      }
+      const aviso = document.getElementById('meow-aviso-privacidad');
+      if (aviso) aviso.style.display = 'none';
+    }
   </script>
 </body>
 </html>
